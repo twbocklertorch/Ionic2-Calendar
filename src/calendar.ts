@@ -134,12 +134,18 @@ export enum Step {
         <template #monthviewDefaultEventDetailTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
             <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
                 <ion-item *ngFor="let event of selectedDate?.events" (click)="eventSelected(event)">
-                        <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn">{{event.startTime|date: 'HH:mm'}}
-                            -
-                            {{event.endTime|date: 'HH:mm'}}
-                        </span>
-                    <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn">{{allDayLabel}}</span>
-                    <span class="event-detail">  |  {{event.title}}</span>
+				
+					<div href="#" class="calendar-hour calendar-hour-taken">
+						<strong class="cal-from">{{event.startTime|date: 'HH:mm'}}</strong>
+						<strong class="cal-to">{{event.endTime|date: 'HH:mm'}}</strong>
+
+						<h4>{{event.title}}</h4>
+						<a class="edit" href="edit-appointment.html"><i class="fa fa-pencil"></i></a>
+						<a href="#" class="delete simple-login-modal"><i class="fa fa-trash"></i></a>
+					</div>
+					
+					
+                        
                 </ion-item>
                 <ion-item *ngIf="selectedDate?.events.length==0">
                     <div class="no-events-label">{{noEventsLabel}}</div>
