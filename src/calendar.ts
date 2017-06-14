@@ -133,23 +133,22 @@ export enum Step {
         </template>
         <template #monthviewDefaultEventDetailTemplate let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
             <ion-list class="event-detail-container" has-bouncing="false" *ngIf="showEventDetail" overflow-scroll="false">
-                <ion-item *ngFor="let event of selectedDate?.events" (click)="eventSelected(event)">
-				
-					<div href="#" class="calendar-hour calendar-hour-taken">
-						<strong class="cal-from">{{event.startTime|date: 'HH:mm'}}</strong>
-						<strong class="cal-to">{{event.endTime|date: 'HH:mm'}}</strong>
-
-						<h4>{{event.title}}</h4>
-						<a class="edit" href="edit-appointment.html"><i class="fa fa-pencil"></i></a>
-						<a href="#" class="delete simple-login-modal"><i class="fa fa-trash"></i></a>
-					</div>
-					
-					
-                        
-                </ion-item>
-                <ion-item *ngIf="selectedDate?.events.length==0">
-                    <div class="no-events-label">{{noEventsLabel}}</div>
-                </ion-item>
+				<ion-item-sliding #item *ngFor="let event of selectedDate?.events">
+					<ion-item (click)="eventSelected(event)">
+						<div href="#" class="calendar-hour calendar-hour-taken">
+							<strong class="cal-from">{{event.startTime|date: 'h:mm a'}}</strong>
+							<strong class="cal-to">{{event.endTime|date: 'h:mm a'}}</strong>
+							<h4>{{event.title}}</h4>
+						</div>
+					</ion-item>
+					<ion-item *ngIf="selectedDate?.events.length==0">
+						<div class="no-events-label">{{noEventsLabel}}</div>
+					</ion-item>
+					<ion-item-options side="right">
+						<button ion-button color="primary" (click)="eventSelected(event)">Edit</button>
+						<button ion-button color="danger" (click)="eventDeleted(event)">Delete</button>
+					</ion-item-options>
+				</ion-item-sliding>
             </ion-list>
         </template>
         <template #defaultAllDayEventTemplate let-displayEvent="displayEvent">
@@ -179,6 +178,7 @@ export enum Step {
                 [lockSwipeToPrev]="lockSwipeToPrev"
                 (onRangeChanged)="rangeChanged($event)"
                 (onEventSelected)="eventSelected($event)"
+				(onEventDeleted)="eventDeleted($event)"
                 (onTimeSelected)="timeSelected($event)"
                 (onTitleChanged)="titleChanged($event)">
             </monthview>
@@ -201,6 +201,7 @@ export enum Step {
                 [lockSwipeToPrev]="lockSwipeToPrev"
                 (onRangeChanged)="rangeChanged($event)"
                 (onEventSelected)="eventSelected($event)"
+				(onEventDeleted)="eventDeleted($event)"
                 (onTimeSelected)="timeSelected($event)"
                 (onTitleChanged)="titleChanged($event)">
             </weekview>
@@ -221,6 +222,7 @@ export enum Step {
                 [lockSwipeToPrev]="lockSwipeToPrev"
                 (onRangeChanged)="rangeChanged($event)"
                 (onEventSelected)="eventSelected($event)"
+				(onEventDeleted)="eventDeleted($event)"
                 (onTimeSelected)="timeSelected($event)"
                 (onTitleChanged)="titleChanged($event)">
             </dayview>
@@ -318,6 +320,7 @@ export class CalendarComponent implements OnInit {
     @Output() onCurrentDateChanged = new EventEmitter<Date>();
     @Output() onRangeChanged = new EventEmitter<IRange>();
     @Output() onEventSelected = new EventEmitter<IEvent>();
+	@Output() onEventDeleted = new EventEmitter<IEvent>();
     @Output() onTimeSelected = new EventEmitter<ITimeSelected>();
     @Output() onTitleChanged = new EventEmitter<string>();
 
@@ -360,6 +363,10 @@ export class CalendarComponent implements OnInit {
         this.onEventSelected.emit(event);
     }
 
+	eventDeleted(event:IEvent) {
+        this.onEventDeleted.emit(event);
+    }
+	
     timeSelected(timeSelected:ITimeSelected) {
         this.onTimeSelected.emit(timeSelected);
     }
