@@ -137,7 +137,7 @@ export enum Step {
 					<ion-item (click)="eventSelected(event)">
 						<div href="#" class="calendar-hour calendar-hour-taken">
 							<strong class="cal-from">{{event.startTime|date: 'h:mm a'}}</strong>
-							<strong class="cal-to">{{event.endTime|date: 'h:mm a'}}</strong>
+							<!--strong class="cal-to">{{event.endTime|date: 'h:mm a'}}</strong-->
 							<h4>{{event.title}}</h4>
 						</div>
 					</ion-item>
